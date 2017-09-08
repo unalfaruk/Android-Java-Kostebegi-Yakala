@@ -5,6 +5,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView8;
     ImageView imageView9;
     ImageView[] kostebekler;
+    Button btnYeniden;
+    CountDownTimer zamanlayici;
 
     Handler handler;
     Runnable runnable;
@@ -44,11 +47,16 @@ public class MainActivity extends AppCompatActivity {
         imageView8= (ImageView) findViewById(R.id.imageView8);
         imageView9= (ImageView) findViewById(R.id.imageView9);
 
+        btnYeniden= (Button) findViewById(R.id.btnYeniden);
+
+        txtPuan= (TextView) findViewById(R.id.txtPuan);
+
         kostebekler=new ImageView[]{imageView1,imageView2,imageView3,imageView4,imageView5,imageView6,imageView7,imageView8,imageView9};
 
         puan=0;
         txtSayac= (TextView) findViewById(R.id.txtSayac);
-        new CountDownTimer(30000,1000){
+
+        zamanlayici=new CountDownTimer(30000,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -63,15 +71,16 @@ public class MainActivity extends AppCompatActivity {
                 for(ImageView kostebek:kostebekler){
                     kostebek.setOnClickListener(null);
                 }
+                btnYeniden.setVisibility(View.VISIBLE);
             }
-        }.start();
+        };
 
+        zamanlayici.start();
         kostebegiGizle();
     }
 
     public void puanArtir(View view){
         puan++;
-        txtPuan= (TextView) findViewById(R.id.txtPuan);
         txtPuan.setText("Puan: "+puan);
     }
 
@@ -93,5 +102,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         handler.post(runnable);
+    }
+
+    public void yenidenBaslat(View view){
+        puan=0;
+        txtPuan.setText("Puan: "+puan);
+        zamanlayici.start();
+        kostebegiGizle();
+        view.setVisibility(View.INVISIBLE);
+        for(ImageView kostebek:kostebekler){
+            kostebek.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    puanArtir(v);
+                }
+            });
+        }
     }
 }

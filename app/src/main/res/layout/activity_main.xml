@@ -55,10 +55,12 @@
             app:srcCompat="@drawable/mole" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnYeniden"
             android:layout_width="121dp"
             android:layout_height="120dp"
-            android:text="Yeniden" />
+            android:onClick="yenidenBaslat"
+            android:text="Yeniden"
+            android:visibility="invisible" />
 
         <ImageView
             android:onClick="puanArtir"
