@@ -110,10 +110,15 @@
     </GridLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnDuraklat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="duraklatDevamEt"
+        android:text="Duraklat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/txtSayac"

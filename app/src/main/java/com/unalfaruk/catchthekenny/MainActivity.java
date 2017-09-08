@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtSayac;
     TextView txtPuan;
     int puan;
+    long kalanZaman;
     ImageView imageView1;
     ImageView imageView2;
     ImageView imageView3;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView9;
     ImageView[] kostebekler;
     Button btnYeniden;
+    Button btnDuraklat;
     CountDownTimer zamanlayici;
 
     Handler handler;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         imageView9= (ImageView) findViewById(R.id.imageView9);
 
         btnYeniden= (Button) findViewById(R.id.btnYeniden);
+        btnDuraklat= (Button) findViewById(R.id.btnDuraklat);
 
         txtPuan= (TextView) findViewById(R.id.txtPuan);
 
@@ -56,11 +59,15 @@ public class MainActivity extends AppCompatActivity {
         puan=0;
         txtSayac= (TextView) findViewById(R.id.txtSayac);
 
-        zamanlayici=new CountDownTimer(30000,1000){
+        zamanlayiciBaslat(30000);
+    }
+
+    public void zamanlayiciBaslat(long sure){
+        zamanlayici=new CountDownTimer(sure,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {
-
+                kalanZaman=millisUntilFinished;
                 txtSayac.setText("Zaman: "+millisUntilFinished/1000);
             }
 
@@ -68,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 txtSayac.setText("Süre bitti.");
                 handler.removeCallbacks(runnable);
-                for(ImageView kostebek:kostebekler){
-                    kostebek.setOnClickListener(null);
-                }
+                kostebekOnClickKaldir();
                 btnYeniden.setVisibility(View.VISIBLE);
             }
         };
@@ -82,6 +87,23 @@ public class MainActivity extends AppCompatActivity {
     public void puanArtir(View view){
         puan++;
         txtPuan.setText("Puan: "+puan);
+    }
+
+    public void kostebekOnClickKaldir(){
+        for(ImageView kostebek:kostebekler){
+            kostebek.setOnClickListener(null);
+        }
+    }
+
+    public void kostebekOnClickEkle(){
+        for(ImageView kostebek:kostebekler){
+            kostebek.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    puanArtir(v);
+                }
+            });
+        }
     }
 
     public void kostebegiGizle(){
@@ -107,16 +129,23 @@ public class MainActivity extends AppCompatActivity {
     public void yenidenBaslat(View view){
         puan=0;
         txtPuan.setText("Puan: "+puan);
-        zamanlayici.start();
-        kostebegiGizle();
+        zamanlayiciBaslat(30000);
         view.setVisibility(View.INVISIBLE);
-        for(ImageView kostebek:kostebekler){
-            kostebek.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    puanArtir(v);
-                }
-            });
+        kostebekOnClickEkle();
+    }
+
+    public void duraklatDevamEt(View view){
+        Button tiklananNesne = (Button) view;
+        String komut= (String) tiklananNesne.getText();
+        if(komut.equals("Duraklat")){
+            zamanlayici.cancel();
+            handler.removeCallbacks(runnable);
+            kostebekOnClickKaldir();
+            tiklananNesne.setText("Devam Et");
+        }else{
+            kostebekOnClickEkle();
+            zamanlayiciBaslat(kalanZaman);
+            tiklananNesne.setText("Duraklat");
         }
     }
 }
