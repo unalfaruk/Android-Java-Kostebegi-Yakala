@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         puan=0;
         txtSayac= (TextView) findViewById(R.id.txtSayac);
 
+        //Bu fonksiyon aldığı parametreye göre oyun süresini başlatıyor.
         zamanlayiciBaslat(30000);
     }
 
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTick(long millisUntilFinished) {
+                /*Kalan zamanı sürekli bir değişkende tutuyoruz, böylece kullanıcı "Duraklat" dediğinde,
+                tekrar devam edeceği zaman zamanlayıcıyı sıfırdan kuracağız ama kaldığı zamandan başlatacağız.*/
                 kalanZaman=millisUntilFinished;
                 txtSayac.setText("Zaman: "+millisUntilFinished/1000);
             }
@@ -77,24 +80,29 @@ public class MainActivity extends AppCompatActivity {
                 handler.removeCallbacks(runnable);
                 kostebekOnClickKaldir();
                 btnYeniden.setVisibility(View.VISIBLE);
+                btnDuraklat.setVisibility(View.INVISIBLE);
             }
         };
 
         zamanlayici.start();
+
         kostebegiGizle();
     }
 
+    //ImageView olan köstebeklerin onClick fonksiyonu
     public void puanArtir(View view){
         puan++;
         txtPuan.setText("Puan: "+puan);
     }
 
+    //Köstebeklere ait OnClick fonksiyonunu devre dışı bırakıyor.
     public void kostebekOnClickKaldir(){
         for(ImageView kostebek:kostebekler){
             kostebek.setOnClickListener(null);
         }
     }
 
+    //Köstebeklere ait OnClik fonksiyonunu devreye alıyor.
     public void kostebekOnClickEkle(){
         for(ImageView kostebek:kostebekler){
             kostebek.setOnClickListener(new View.OnClickListener(){
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Rastgele köstebek gösteren fonksiyon
     public void kostebegiGizle(){
 
         handler=new Handler();
@@ -126,25 +135,48 @@ public class MainActivity extends AppCompatActivity {
         handler.post(runnable);
     }
 
+    //Yeniden butonunun onClick fonksiyonu
     public void yenidenBaslat(View view){
+        //Puanı sıfırlıyoruz.
         puan=0;
         txtPuan.setText("Puan: "+puan);
+
+        //Zamanlayıcıyı tekrar ayarlıyoruz.
         zamanlayiciBaslat(30000);
+
+        //Tıklana "Yeniden" butonunu gizliyoruz.
         view.setVisibility(View.INVISIBLE);
+
+        //Köstebeklere onClick fonksiyonunu ekliyoruz.
         kostebekOnClickEkle();
+
+        btnDuraklat.setVisibility(View.VISIBLE);
     }
 
+    //Duraklat/Devam Et butonunun onClick fonksiyonu
     public void duraklatDevamEt(View view){
+        //Tıklanan nesnenin buton olduğunu belirtiyoruz.
         Button tiklananNesne = (Button) view;
+
+        //Butonun yazısını çekiyoruz, yazıya göre işlem yapacağız.
         String komut= (String) tiklananNesne.getText();
+
+        //Duraklat komutu istenmişse
         if(komut.equals("Duraklat")){
+            //Geriye sayan sayacımızı durduruyoruz.
             zamanlayici.cancel();
+            //Rastgele köstebek gösteren fonksiyonu da durduruyoruz.
             handler.removeCallbacks(runnable);
+            //Köstebeklere ait onClick fonksiyonunu da kaldırıyoruz.
             kostebekOnClickKaldir();
+            //Butonun yazısını "Devam Et" olarak değiştiriyoruz.
             tiklananNesne.setText("Devam Et");
         }else{
+            //Köstebeklere ait onClick fonksiyonunu ekliyoruz.
             kostebekOnClickEkle();
+            //Geriye sayan sayacımızı başlatıyoruz.
             zamanlayiciBaslat(kalanZaman);
+            //Butonun yazısını "Duraklat olarak değiştiriyoruz.
             tiklananNesne.setText("Duraklat");
         }
     }
