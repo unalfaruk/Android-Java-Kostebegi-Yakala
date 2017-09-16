@@ -1,6 +1,6 @@
 # Köstebeği Yakala (Catch the Kenny)
 
-Udemy üzerinde Atıf Samancıoğlu'nun verdiği Android eğitimden bir örnek olan 'Catch the Kenny' oyunu için küçük geliştirmeler.
+Udemy üzerinde Atıl Samancıoğlu'nun verdiği Android eğitimden bir örnek olan 'Catch the Kenny' oyunu için küçük geliştirmeler.
 
 ### Farklar / Yeni Özellikler!
 
